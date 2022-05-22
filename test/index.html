@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/beercss@2.0.19/dist/cdn/beer.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/beercss@2.0.19/dist/cdn/beer.min.js" type="text/javascript"></script>
 
     <style>
         #draggable {
@@ -12,13 +16,50 @@
             overflow-x: scroll;
             gap: 8px;
         }
+
+        #draggable::-webkit-scrollbar {
+            display: none;
+        }
+
+        .wrapper button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .wrapper {
+            position: relative;
+            margin: 32px;
+        }
+
+        .left {
+            left: 8px;
+        }
+
+        .right {
+            right: 8px;
+        }
     </style>
 </head>
+
 <body>
-    <div id="draggable">
-        <img src="https://picsum.photos/seed/1/200/300" alt=""><img src="https://picsum.photos/seed/2/200/300" alt=""><img src="https://picsum.photos/seed/3/200/300" alt=""><img src="https://picsum.photos/seed/4/200/300" alt=""><img src="https://picsum.photos/seed/5/200/300" alt=""><img src="https://picsum.photos/seed/6/200/300" alt=""><img src="https://picsum.photos/seed/7/200/300" alt=""><img src="https://picsum.photos/seed/8/200/300" alt=""><img src="https://picsum.photos/seed/9/200/300" alt=""><img src="https://picsum.photos/seed/10/200/300" alt="">
+    <div class="wrapper">
+        <button class="square round extra left draggable-hide-start"><i>arrow_backwards</i></button>
+        <button class="square round extra right draggable-hide-end"><i>arrow_forwards</i></button>
+        <div id="draggable">
+            <img src="https://picsum.photos/seed/1/200/300" alt=""><img src="https://picsum.photos/seed/2/200/300"
+                alt=""><img src="https://picsum.photos/seed/3/200/300" alt=""><img
+                src="https://picsum.photos/seed/4/200/300" alt=""><img src="https://picsum.photos/seed/5/200/300"
+                alt=""><img src="https://picsum.photos/seed/6/200/300" alt=""><img
+                src="https://picsum.photos/seed/7/200/300" alt=""><img src="https://picsum.photos/seed/8/200/300"
+                alt=""><img src="https://picsum.photos/seed/9/200/300" alt=""><img
+                src="https://picsum.photos/seed/10/200/300" alt="">
+        </div>
     </div>
+
 
     <script type="module" src="test.js"></script>
 </body>
+
 </html>

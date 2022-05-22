@@ -11,12 +11,16 @@ class DraggableScrollArea {
     private lastGrabTime: number;
     private lastGrabScrollLeft: number;
     private lastGrabScrollTop: number;
+    private hidesOnStart: [HTMLElement?];
+    private hidesOnEnd: [HTMLElement?];
     private options: DraggableScrollAreaOptions = {
         velocity: true
     };
 
     constructor(element: HTMLElement, options: DraggableScrollAreaOptions = {}) {
         this.element = element;
+        this.hidesOnStart = [];
+        this.hidesOnEnd = [];
         this.options = { ...this.options, ...options };
 
         this.element.classList.add('draggable-area');
@@ -25,6 +29,12 @@ class DraggableScrollArea {
         this.element.addEventListener('mousemove', this.onMouseMove);
         this.element.addEventListener('mouseup', this.onMouseUp);
         this.element.addEventListener('mouseleave', this.onMouseUp);
+        this.element.addEventListener('scroll', this.handleHides);
+
+        // TODO: remove setTimeout
+        setTimeout(() => {
+            this.handleHides();
+        }, 125);
     }
 
     public forwards = (): void => {
@@ -35,9 +45,20 @@ class DraggableScrollArea {
         this.changeStep(-1);
     }
 
+    public hideOnStart = (element: HTMLElement): void => {
+        this.hidesOnStart.push(element);
+    }
+
+    public hideOnEnd = (element: HTMLElement): void => {
+        this.hidesOnEnd.push(element);
+    }
+
     private changeStep = (direction: number): void => {
-        this.element.scrollLeft += (this.element.clientWidth / 1.5) * direction;
-        this.element.scrollTop += (this.element.clientHeight / 1.5) * direction;
+        this.element.scrollBy({
+            top: (this.element.clientHeight / 1.5) * direction,
+            left: (this.element.clientWidth / 1.5) * direction,
+            behavior: 'smooth'
+        });
     }
 
     private onMouseDown = (): void => {
@@ -65,8 +86,11 @@ class DraggableScrollArea {
     }
 
     private onMouseUp = (): void => {
+        if (!this.isGrabbed) return;
+
         this.element.classList.remove('grabbing');
         this.isGrabbed = false;
+
         const grabbingTime = Date.now() - this.lastGrabTime;
         const grabbingDistanceX = this.element.scrollLeft - this.lastGrabScrollLeft;
         const grabbingDistanceY = this.element.scrollTop - this.lastGrabScrollTop;
@@ -76,6 +100,19 @@ class DraggableScrollArea {
             this.activeVelocityEffect = true;
             window.requestAnimationFrame(() => this.velocityEffect(speed + (speed > 0 ? 1 : -1)));
         }
+    };
+
+    private handleHides = (): void => {
+        const isStart = 
+            this.element.scrollLeft < this.element.clientWidth * 0.2
+            && this.element.scrollTop < this.element.clientHeight * 0.2;
+
+        const isEnd =
+            this.element.scrollLeft > this.element.scrollWidth - this.element.clientWidth * 1.2
+            && this.element.scrollTop > this.element.scrollHeight - this.element.clientHeight * 1.2;
+
+        this.hidesOnStart.forEach(element => element.style.display = isStart ? 'none' : null);
+        this.hidesOnEnd.forEach(element => element.style.display = isEnd ? 'none' : null);
     };
 }
 
