@@ -1,11 +1,24 @@
 import './style.css';
 
+type DraggableScrollAreaOptions = {
+    velocity?: boolean
+};
+
 class DraggableScrollArea {
     private element: HTMLElement;
     private isGrabbed = false;
+    private activeVelocityEffect= false;
+    private lastGrabTime: number;
+    private lastGrabScrollLeft: number;
+    private lastGrabScrollTop: number;
+    private options: DraggableScrollAreaOptions = {
+        velocity: true
+    };
 
-    constructor(element: HTMLElement) {
+    constructor(element: HTMLElement, options: DraggableScrollAreaOptions = {}) {
         this.element = element;
+        this.options = { ...this.options, ...options };
+
         this.element.classList.add('draggable-area');
 
         this.element.addEventListener('mousedown', this.onMouseDown);
@@ -30,6 +43,10 @@ class DraggableScrollArea {
     private onMouseDown = (): void => {
         this.element.classList.add('grabbing');
         this.isGrabbed = true;
+        this.activeVelocityEffect = false;
+        this.lastGrabTime = Date.now();
+        this.lastGrabScrollLeft = this.element.scrollLeft;
+        this.lastGrabScrollTop = this.element.scrollTop;
     };
 
     private onMouseMove = (event: MouseEvent): void => {
@@ -39,9 +56,26 @@ class DraggableScrollArea {
         this.element.scrollTop = this.element.scrollTop - event.movementY;
     };
 
+    private velocityEffect = (speed: number): FrameRequestCallback => {
+        if (!this.activeVelocityEffect) return;
+        if (speed <= 1 && speed >= -1) return;
+
+        this.element.scrollLeft = this.element.scrollLeft + speed;
+        window.requestAnimationFrame(() => this.velocityEffect(speed / 1.09));
+    }
+
     private onMouseUp = (): void => {
         this.element.classList.remove('grabbing');
         this.isGrabbed = false;
+        const grabbingTime = Date.now() - this.lastGrabTime;
+        const grabbingDistanceX = this.element.scrollLeft - this.lastGrabScrollLeft;
+        const grabbingDistanceY = this.element.scrollTop - this.lastGrabScrollTop;
+        const speed = (grabbingDistanceX + grabbingDistanceY) / grabbingTime;
+
+        if (this.options.velocity) {
+            this.activeVelocityEffect = true;
+            window.requestAnimationFrame(() => this.velocityEffect(speed + (speed > 0 ? 1 : -1)));
+        }
     };
 }
 
