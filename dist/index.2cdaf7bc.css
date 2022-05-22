@@ -1,0 +1,18 @@
+.draggable-area {
+  cursor: grab;
+}
+
+.draggable-area.grabbing {
+  cursor: grabbing;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.draggable-area.grabbing * {
+  user-drag: none;
+  -webkit-user-select: none;
+  user-select: none;
+  pointer-events: none;
+}
+
+/*# sourceMappingURL=index.2cdaf7bc.css.map */
