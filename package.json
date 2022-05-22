@@ -1,0 +1,26 @@
+{
+  "name": "draggable-scrollarea",
+  "version": "1.0.0",
+  "description": "Enable drag to scroll on any area with an overflow scroll",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "npx webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/arnoclr/draggable-scrollarea"
+  },
+  "keywords": [
+    "drag",
+    "scroll"
+  ],
+  "author": "Arno Cellarier",
+  "license": "MIT",
+  "devDependencies": {
+    "css-loader": "^6.7.1",
+    "style-loader": "^3.3.1",
+    "ts-loader": "^9.3.0",
+    "typescript": "^4.6.4",
+    "webpack-cli": "^4.9.2"
+  }
+}

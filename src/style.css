@@ -1,0 +1,14 @@
+.draggable-area {
+    cursor: grab;
+}
+
+.draggable-area.grabbing {
+    cursor: grabbing;
+    user-select: none;
+}
+
+.draggable-area.grabbing * {
+    user-drag: none;
+    user-select: none;
+    pointer-events: none;
+}
