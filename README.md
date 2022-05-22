@@ -9,13 +9,17 @@ Enable drag to scroll on any area with an overflow scroll.
 You can load it from a CDN, with cdn version of library:
 
 ```html
-<script src="path/to/cdn.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/draggable-scrollarea@1"></script>
 <script>
     const draggableDiv = new DraggableScrollArea(document.querySelector('#draggable-div'));
 </script>
 ```
 
 Or you can import it via ES6 module:
+
+```bash
+npm i draggable-scrollarea
+```
 
 ```js
 import DraggableScrollArea from 'path/to/draggable-scrollarea';
