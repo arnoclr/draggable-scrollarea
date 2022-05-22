@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "npx webpack",
-    "dev": "parcel test/index.html"
+    "dev": "parcel test/index.html --dist-dir tmp"
   },
   "repository": {
     "type": "git",
