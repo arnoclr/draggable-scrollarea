@@ -29,6 +29,11 @@ class DraggableScrollArea {
         this.element.addEventListener('mouseleave', this.onMouseUp);
         this.element.addEventListener('scroll', this.handleHides);
 
+        this.element.querySelectorAll('img, a').forEach(img => {
+            img.setAttribute('draggable', 'false');
+            img.addEventListener('dragstart', e => e.preventDefault());
+        });
+
         // TODO: remove setTimeout
         setTimeout(() => {
             this.handleHides();
@@ -71,6 +76,7 @@ class DraggableScrollArea {
     private onMouseMove = (event: MouseEvent): void => {
         if (!this.isGrabbed) return;
 
+        this.element.classList.add('moving');
         this.element.scrollLeft = this.element.scrollLeft - event.movementX;
         this.element.scrollTop = this.element.scrollTop - event.movementY;
     };
@@ -92,7 +98,7 @@ class DraggableScrollArea {
     private onMouseUp = (): void => {
         if (!this.isGrabbed) return;
 
-        this.element.classList.remove('grabbing');
+        this.element.classList.remove('grabbing', 'moving');
         this.isGrabbed = false;
 
         const DISTANCE_FRAMES = 10;

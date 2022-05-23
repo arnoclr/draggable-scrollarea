@@ -8,8 +8,12 @@
 }
 
 .draggable-area.grabbing * {
-    user-drag: none;
+    -webkit-user-drag: none;
     user-select: none;
+}
+
+.draggable-area.moving * {
+    pointer-events: none;
 }
 
 .draggable-area.grabbing *:not(a, button) {
