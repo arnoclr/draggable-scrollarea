@@ -8,11 +8,9 @@ class DraggableScrollArea {
     private element: HTMLElement;
     private isGrabbed = false;
     private activeVelocityEffect= false;
-    private lastGrabTime: number;
-    private lastGrabScrollLeft: number;
-    private lastGrabScrollTop: number;
     private hidesOnStart: [HTMLElement?];
     private hidesOnEnd: [HTMLElement?];
+    private scrollPositions: [number?];
     private options: DraggableScrollAreaOptions = {
         velocity: true
     };
@@ -65,9 +63,9 @@ class DraggableScrollArea {
         this.element.classList.add('grabbing');
         this.isGrabbed = true;
         this.activeVelocityEffect = false;
-        this.lastGrabTime = Date.now();
-        this.lastGrabScrollLeft = this.element.scrollLeft;
-        this.lastGrabScrollTop = this.element.scrollTop;
+
+        this.scrollPositions = [];
+        this.appendScrollPositions();
     };
 
     private onMouseMove = (event: MouseEvent): void => {
@@ -77,12 +75,18 @@ class DraggableScrollArea {
         this.element.scrollTop = this.element.scrollTop - event.movementY;
     };
 
+    private appendScrollPositions = (): void => {
+        if (!this.isGrabbed) return;
+        this.scrollPositions.push(this.element.scrollLeft + this.element.scrollTop);
+        window.requestAnimationFrame(() => this.appendScrollPositions());
+    }
+
     private velocityEffect = (speed: number): FrameRequestCallback => {
         if (!this.activeVelocityEffect) return;
         if (speed <= 1 && speed >= -1) return;
 
         this.element.scrollLeft = this.element.scrollLeft + speed;
-        window.requestAnimationFrame(() => this.velocityEffect(speed / 1.09));
+        window.requestAnimationFrame(() => this.velocityEffect(speed / 1.1));
     }
 
     private onMouseUp = (): void => {
@@ -91,14 +95,15 @@ class DraggableScrollArea {
         this.element.classList.remove('grabbing');
         this.isGrabbed = false;
 
-        const grabbingTime = Date.now() - this.lastGrabTime;
-        const grabbingDistanceX = this.element.scrollLeft - this.lastGrabScrollLeft;
-        const grabbingDistanceY = this.element.scrollTop - this.lastGrabScrollTop;
-        const speed = (grabbingDistanceX + grabbingDistanceY) / grabbingTime;
+        const DISTANCE_FRAMES = 10;
+
+        const previousPoint = this.scrollPositions.length > DISTANCE_FRAMES ? this.scrollPositions[this.scrollPositions.length - DISTANCE_FRAMES] : this.scrollPositions[this.scrollPositions.length - 2];
+        const currentPoint = this.scrollPositions[this.scrollPositions.length - 1]
+        const distance = currentPoint - previousPoint;
 
         if (this.options.velocity) {
             this.activeVelocityEffect = true;
-            window.requestAnimationFrame(() => this.velocityEffect(speed + (speed > 0 ? 1 : -1)));
+            window.requestAnimationFrame(() => this.velocityEffect(distance / DISTANCE_FRAMES));
         }
     };
 
