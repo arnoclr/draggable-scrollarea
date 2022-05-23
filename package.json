@@ -1,6 +1,6 @@
 {
   "name": "draggable-scrollarea",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Enable drag to scroll on any area with an overflow scroll",
   "main": "dist/index.js",
   "scripts": {
