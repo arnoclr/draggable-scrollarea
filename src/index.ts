@@ -7,7 +7,7 @@ type DraggableScrollAreaOptions = {
 class DraggableScrollArea {
     private element: HTMLElement;
     private isGrabbed = false;
-    private activeVelocityEffect= false;
+    private activeVelocityEffect = false;
     private hidesOnStart: [HTMLElement?];
     private hidesOnEnd: [HTMLElement?];
     private scrollPositions: [number?];
@@ -34,10 +34,13 @@ class DraggableScrollArea {
             img.addEventListener('dragstart', e => e.preventDefault());
         });
 
-        // TODO: remove setTimeout
-        setTimeout(() => {
+        // TODO: fix hidden right button on first open
+
+        const resizeObserver = new ResizeObserver(() => {
             this.handleHides();
-        }, 125);
+        });
+
+        resizeObserver.observe(this.element);
     }
 
     public forwards = (): void => {
@@ -114,7 +117,7 @@ class DraggableScrollArea {
     };
 
     private handleHides = (): void => {
-        const isStart = 
+        const isStart =
             this.element.scrollLeft < this.element.clientWidth * 0.2
             && this.element.scrollTop < this.element.clientHeight * 0.2;
 
