@@ -110,7 +110,7 @@ class DraggableScrollArea {
         const currentPoint = this.scrollPositions[this.scrollPositions.length - 1]
         const distance = currentPoint - previousPoint;
 
-        if (this.options.velocity) {
+        if (this.options.velocity && distance) {
             this.activeVelocityEffect = true;
             window.requestAnimationFrame(() => this.velocityEffect(distance / DISTANCE_FRAMES));
         }
